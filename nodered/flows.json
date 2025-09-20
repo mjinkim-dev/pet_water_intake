@@ -1,0 +1,215 @@
+[
+    {
+        "id": "e5a30252c537c3c3",
+        "type": "tab",
+        "label": "water project",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "bbd5e5c735e950ed",
+        "type": "mqtt in",
+        "z": "e5a30252c537c3c3",
+        "name": "급수 명령 구독",
+        "topic": "/pet/water/command",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "426f51af3d9c8210",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 120,
+        "y": 100,
+        "wires": [
+            [
+                "19872d868aad0856",
+                "fe3dbfadc2645980"
+            ]
+        ]
+    },
+    {
+        "id": "f36bfbf098b81203",
+        "type": "debug",
+        "z": "e5a30252c537c3c3",
+        "name": "Command 디버깅",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 530,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "5e0e25bd40f783f1",
+        "type": "mqtt in",
+        "z": "e5a30252c537c3c3",
+        "name": "Alert 구독",
+        "topic": "/pet/water/alert",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "426f51af3d9c8210",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 100,
+        "y": 40,
+        "wires": [
+            [
+                "9d24196075659314"
+            ]
+        ]
+    },
+    {
+        "id": "9d24196075659314",
+        "type": "debug",
+        "z": "e5a30252c537c3c3",
+        "name": "Alert 디버깅",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 510,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "19872d868aad0856",
+        "type": "function",
+        "z": "e5a30252c537c3c3",
+        "name": "음수량 계산",
+        "func": "let count = context.get('count') || 0;\nif (msg.topic === '/pet/water/reset') {\n    count = 0;\n} else {\n    count += 1;\n}\ncontext.set('count', count);\nconst volume = count * 200; // 각 명령당 200ml\nmsg.payload = volume + 'ml';\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 310,
+        "y": 160,
+        "wires": [
+            [
+                "612d5383b006cc90",
+                "1ff805a748b80920"
+            ]
+        ]
+    },
+    {
+        "id": "1ff805a748b80920",
+        "type": "mqtt out",
+        "z": "e5a30252c537c3c3",
+        "name": "음수량 발행",
+        "topic": "/pet/water/volume",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "426f51af3d9c8210",
+        "x": 510,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "612d5383b006cc90",
+        "type": "debug",
+        "z": "e5a30252c537c3c3",
+        "name": "Water Intake 디버깅",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 540,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "d7ceb01bc6c80056",
+        "type": "mqtt in",
+        "z": "e5a30252c537c3c3",
+        "name": "음수량 리셋",
+        "topic": "/pet/water/reset",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "426f51af3d9c8210",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 110,
+        "y": 160,
+        "wires": [
+            [
+                "19872d868aad0856"
+            ]
+        ]
+    },
+    {
+        "id": "fe3dbfadc2645980",
+        "type": "function",
+        "z": "e5a30252c537c3c3",
+        "name": "명령 수신 확인",
+        "func": "const a = \"command received\";\nmsg.payload = a;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 100,
+        "wires": [
+            [
+                "f36bfbf098b81203"
+            ]
+        ]
+    },
+    {
+        "id": "426f51af3d9c8210",
+        "type": "mqtt-broker",
+        "name": "final_team4_AIS",
+        "broker": "broker.hivemq.com",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    }
+]
