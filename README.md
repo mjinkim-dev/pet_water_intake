@@ -42,6 +42,8 @@ Design Notes:
 | `/pet/water/reset`    | Reset daily intake counter   |
 | `/pet/water/alert`    | (Planned) Low-water alert    |
 
+## Demo
+[![시연 영상](https://img.youtube.com/vi/mQTfiPeakgI/0.jpg)](https://youtu.be/mQTfiPeakgI)
 
 ---
 
